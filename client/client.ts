@@ -23,12 +23,23 @@ client.waitForReady(deadline, (err) => {
 });
 
 function onClientReady(){
-    client.PingPong({message: 'Ping'}, (err, result) => {
-        if(err){
-            console.error(err);
-            return;
-        }
+    // client.PingPong({message: 'Ping'}, (err, result) => {
+    //     if(err){
+    //         console.error(err);
+    //         return;
+    //     }
 
-        console.log(result);
+    //     console.log(result);
+    // });
+
+    const streamer = client.RandomNumber({maxVal: 20});
+
+    streamer.on('data', (chunk) => {
+        console.log(chunk)
+    });
+
+    streamer.on('end', () => {
+        console.log('Communication terminated')
     })
+
 }
