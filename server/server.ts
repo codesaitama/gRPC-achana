@@ -32,6 +32,24 @@ function getServer(){
            // req.request;
             console.log(req.request);
             res(null, {message: 'Pong'});
+        },
+        RandomNumber: (call) => {
+            const {maxVal = 10} = call.request;
+           
+            let count = 0
+            const id = setInterval(() => {
+                count = ++count;
+
+                call.write({num: Math.floor(Math.random() * maxVal)});
+
+                if(count >= 10){
+                    clearInterval(id);
+                    call.end();
+                }
+
+            }, 2000)
+
+            
         }
     } as RandomHandlers);
 
