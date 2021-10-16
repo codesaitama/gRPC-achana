@@ -3,10 +3,13 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import { ProtoGrpcType } from '../proto/random';
 import { RandomHandlers } from '../proto/randomPackage/Random'
+import { TodoResponse } from '../proto/randomPackage/TodoResponse';
 
 const PORT = 8082;
 const PROTO_FILE = '../proto/random.proto';
-const TODOS = [];
+
+const TODOS :Array<object> = [];
+//const _TODOS :TodoResponse = {todos: []};
 
 const packageDef = protoLoader.loadSync(path.resolve(__dirname, PROTO_FILE));
 const grpcObject = (grpc.loadPackageDefinition(packageDef) as unknown) as ProtoGrpcType;

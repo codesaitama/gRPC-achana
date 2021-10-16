@@ -32,14 +32,29 @@ function onClientReady(){
     //     console.log(result);
     // });
 
-    const streamer = client.RandomNumber({maxVal: 20});
+    // const streamer = client.RandomNumber({maxVal: 20});
 
-    streamer.on('data', (chunk) => {
-        console.log(chunk)
+    // streamer.on('data', (chunk) => {
+    //     console.log(chunk)
+    // });
+
+    // streamer.on('end', () => {
+    //     console.log('Communication terminated')
+    // })
+
+    const stream = client.TodoList((err, results) => {
+        if(err){
+            console.error(err);
+            return;
+        }
+
+        console.log(results);
     });
 
-    streamer.on('end', () => {
-        console.log('Communication terminated')
-    })
+    stream.write({todo: 'Learn how to use gRPC', status: 'Pending'});
+    stream.write({todo: 'Learn how to use typescript for react', status: 'Done'});
+    stream.write({todo: 'Master react-native', status: 'Pending'});
+    stream.write({todo: 'Start cooking for myself', status: 'Pending'});
 
+    stream.end();
 }
