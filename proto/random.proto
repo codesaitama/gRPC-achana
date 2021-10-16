@@ -4,7 +4,7 @@ package randomPackage;
 
 service Random {
     rpc PingPong (PingRequest) returns (PongResponse);
-    rpc RandomNumber (NumberRequest) returns (NumberResponse);
+    rpc RandomNumber (NumberRequest) returns ( stream NumberResponse);
 }
 
 message PingRequest{
