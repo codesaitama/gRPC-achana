@@ -1,6 +1,8 @@
 import path from 'path';
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
+import readline from 'readline'
+
 import { ProtoGrpcType } from '../proto/random';
 
 const PORT = 8082;
@@ -23,25 +25,31 @@ client.waitForReady(deadline, (err) => {
 });
 
 function onClientReady(){
-    // client.PingPong({message: 'Ping'}, (err, result) => {
-    //     if(err){
-    //         console.error(err);
-    //         return;
-    //     }
 
-    //     console.log(result);
-    // });
+    /*
+    client.PingPong({message: 'Ping'}, (err, result) => {
+        if(err){
+            console.error(err);
+            return;
+        }
 
-    // const streamer = client.RandomNumber({maxVal: 20});
+        console.log(result);
+    });
+    */
 
-    // streamer.on('data', (chunk) => {
-    //     console.log(chunk)
-    // });
+    /*
+    const streamer = client.RandomNumber({maxVal: 20});
 
-    // streamer.on('end', () => {
-    //     console.log('Communication terminated')
-    // })
+    streamer.on('data', (chunk) => {
+        console.log(chunk)
+    });
 
+    streamer.on('end', () => {
+        console.log('Communication terminated')
+    });
+
+    */
+/*
     const stream = client.TodoList((err, results) => {
         if(err){
             console.error(err);
@@ -55,6 +63,39 @@ function onClientReady(){
     stream.write({todo: 'Learn how to use typescript for react', status: 'Done'});
     stream.write({todo: 'Master react-native', status: 'Pending'});
     stream.write({todo: 'Start cooking for myself', status: 'Pending'});
-
     stream.end();
+    */
+
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      })
+    
+      const username = process.argv[2]
+      if (!username) console.error("No username, can't join chat"), process.exit()
+    
+    
+      const metadata = new grpc.Metadata()
+
+      metadata.set("username", username)
+      const call = client.Chat(metadata)
+      
+      call.write({
+        message: "register"
+      })
+    
+      call.on("data", (chunk) => {
+        console.log(`${chunk.username} ==> ${chunk.message}`)
+      })
+    
+      rl.on("line", (line) => {
+        if(line === "quit") {
+          call.end()
+        }else {
+          call.write({
+            message: line
+          })
+        }
+    
+      })
 }
